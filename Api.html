@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <title>所有POI的查询-地址解析</title>
+    <script src="../API/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.2"></script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=ada0145080deff882d2a28e8af2047ad"></script>
+    <link rel="stylesheet" href="../API/Api.css"/>
+</head>
+<body>
+<div class="box_dis">
+    <div type="text" class="search"><img id="" src="../API/images.jpg" height="15" width="15">搜索地点
+    </div>
+</div>
+<div class="distance">
+    <div id="container"></div>
+</div>
+<div class="scroll" id="view">
+    <div id="panel"></div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    window.onload = function () {
+        displayPOI()
+        getLocation()
+//        regeocoder()
+
+    }
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        }
+
+    }
+    function showPosition(position) {
+//        x.innerHTML="Latitude: " + position.coords.latitude +
+//                "<br />Longitude: " + position.coords.longitude;
+
+        var obj_info = {latitude: position.coords.latitude, longitude: position.coords.longitude};
+
+        localStorage.setItem("info", JSON.stringify(obj_info));
+//        for(var i=0;i<20;i++){
+//
+//        }
+//        var array_info = JSON.parse(localStorage.getItem("info")) || [];
+
+    }
+
+    var dress = JSON.parse(localStorage.getItem("info"))
+
+    var map = new BMap.Map("container");
+
+    var mPoint = new BMap.Point(dress.longitude, dress.latitude);
+    map.centerAndZoom(mPoint, 15);
+    map.enableScrollWheelZoom();        //启用滚轮缩放
+
+    var mOption = {
+        poiRadius: 2500,           //半径为1000米内的POI,默认100米
+        numPois: 20              //列举出50个POI,默认10个
+    }
+
+    var myGeo = new BMap.Geocoder();        //创建地址解析实例
+    function displayPOI() {
+        map.addOverlay(new BMap.Circle(mPoint, 0));        //添加一个圆形覆盖物
+        myGeo.getLocation(mPoint,
+                function mCallback(rs) {
+                    var allPois = rs.surroundingPois;       //获取全部POI（该点半径为100米内有6个POI点）
+                    for (i = 0; i < allPois.length; ++i) {
+                        document.getElementById("panel").innerHTML += "<div class='list' id="+allPois[i].title+"><div class='site'>" + allPois[i].title +"</div><div class='site_down'>" + allPois[i].address + "</div><span class='right'><img class='tex'  src='../API/outstyle091100004.jpg' id="+allPois[i].title+"></span></div></div>";
+                        map.addOverlay(new BMap.Marker(allPois[i].point));
+                        $('.anchorBL').css('display','none');
+                    }
+
+                }, mOption
+        );
+    }
+//    function displayPOI() {
+//        map.addOverlay(new BMap.Circle(mPoint, 0));        //添加一个圆形覆盖物
+//        myGeo.getLocation(mPoint,
+//                function mCallback(rs) {
+//                    var allPois = rs.surroundingPois;       //获取全部POI（该点半径为100米内有6个POI点）
+//                    allPois.length.forEach(function (name) {
+//                        var map_html="<div class='list' id="+name.title+"><div class='site'>"+name.title+"</div><div class='site_down'>"+name.address+"</div><span class='right'><img class='tex'  src='../API/outstyle091100004.jpg' id="+name.title+"></span></div>"
+//                        $("#view").append(map_html);
+//
+//                        $(document).ready(function(){
+//                            $('#'+name.title).click(function(){
+//                                $('.tex').css('display','none');
+//                                $('#'+name.title).show();
+//
+//                            });
+//
+//
+//                        });
+//
+//                    })
+//
+//                }, mOption
+//        );
+//    }
+
+
+</script>
