@@ -31,58 +31,27 @@
     window.onload = function () {
 
         getLocation()
-        geocoder()
+//        geocoder()
         displayPOI()
     }
     var map = new AMap.Map("contair", {
         resizeEnable: true
     });
-    function select(e) {
-        placeSearch.setCity(e.poi.adcode);
-        placeSearch.search(e.poi.name);  //关键字查询查询
-        var poiArr = e.poi.name;
-        localStorage.setItem("name", JSON.stringify(poiArr));
-        var geocoder = new AMap.Geocoder({
-            //城市，默认：“全国”
-            radius: 1000 //范围，默认：500
-        });
-        //地理编码,返回地理编码结果
-
-        geocoder.getLocation(JSON.parse(localStorage.getItem("name")), function (status, result) {
-            if (status === 'complete' && result.info === 'OK') {
-                geocoder_CallBack(result);
-            }
-        });
-
-    }
     function geocoder_CallBack(data) {
         var orignal = document.getElementById('panel');
         orignal.parentNode.removeChild(orignal);
         var geocode = data.geocodes;
         var dress = JSON.parse(localStorage.getItem("info"))
         var obj_info = {latitude: geocode[0].location.getLat(), longitude: geocode[0].location.getLng()}//gaiII
-            localStorage.setItem("data", JSON.stringify(obj_info));
+        localStorage.setItem("data", JSON.stringify(obj_info));
         console.log(JSON.parse(localStorage.getItem("name")))
- //       var mPoint = new BMap.Point(dress.longitude, dress.latitude);
-
         var mPoint = new BMap.Point(obj_info.longitude, obj_info.latitude);
 
-//        console.log(dress)
-//       if(localStorage.getItem("info")){
-//
-//            var mPoint = new BMap.Point(dress.longitude, dress.latitude);
-//
-//        }
-//        if(obj_info.latitude>0){
-//            var mPoint = new BMap.Point(obj_info.longitude, obj_info.latitude);
-//            console.log(obj_info.latitude)
-//            localStorage.removeItem("info")
-//        }
         var mOption = {
             poiRadius: 2500,           //半径为1000米内的POI,默认100米
-            numPois:30             //列举出50个POI,默认10个
+            numPois: 30             //列举出50个POI,默认10个
         }
-        map.centerAndZoom(mPoint, 15);
+        map.centerAndZoom(mPoint, 50);
         map.enableScrollWheelZoom();
         var myGeo = new BMap.Geocoder();        //创建地址解析实例
         map.addOverlay(new BMap.Circle(mPoint, 0));        //添加一个圆形覆盖物
@@ -103,6 +72,7 @@
 
                 }, mOption
         );
+
     }
     function getLocation() {
         if (navigator.geolocation) {
@@ -142,9 +112,14 @@
         map: map
     });  //构造地点查询类
     AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+    function select(e) {
+        placeSearch.setCity(e.poi.adcode);
+        placeSearch.search(e.poi.name);  //关键字查询查询
+        var poiArr = e.poi.name;
 
-    function geocoder() {
-//        var address = JSON.parse(localStorage.getItem("name"))
+//        var orignal = document.getElementById('panel');
+//        orignal.parentNode.removeChild(orignal);
+        localStorage.setItem("name", JSON.stringify(poiArr));
         var geocoder = new AMap.Geocoder({
             //城市，默认：“全国”
             radius: 1000 //范围，默认：500
@@ -156,31 +131,18 @@
                 geocoder_CallBack(result);
             }
         });
-//        displayPOI()
+
     }
     var dress = JSON.parse(localStorage.getItem("info"))
-//
-//
     var map = new BMap.Map("containe");
     localStorage.removeItem("name")
-
-
-//function choose(){
-//    if(JSON.parse(localStorage.getItem("info")).latitude==38.001464){
-//
-//    }
-//    else{
-//        displayPOI()
-//    }
-//}
-
     function displayPOI() {
-             //启用滚轮缩放
+        //启用滚轮缩放
         var dress = JSON.parse(localStorage.getItem("info"))
         var mPoint = new BMap.Point(dress.longitude, dress.latitude);
         var mOption = {
             poiRadius: 2500,           //半径为1000米内的POI,默认100米
-            numPois:30             //列举出50个POI,默认10个
+            numPois: 30             //列举出50个POI,默认10个
         }
         map.centerAndZoom(mPoint, 15);
         map.enableScrollWheelZoom();
@@ -204,36 +166,6 @@
                 }, mOption
         );
     }
-//    function displayPOI_() {
-//        var data = JSON.parse(localStorage.getItem("data"))
-//
-//        var mPoint = new BMap.Point(data.longitude, data.latitude);
-//        var mOption = {
-//            poiRadius: 2500,           //半径为1000米内的POI,默认100米
-//            numPois:30             //列举出50个POI,默认10个
-//        }
-//        map.centerAndZoom(mPoint, 15);
-//        map.enableScrollWheelZoom();
-//        var myGeo = new BMap.Geocoder();        //创建地址解析实例
-//        map.addOverlay(new BMap.Circle(mPoint, 0));        //添加一个圆形覆盖物
-//        myGeo.getLocation(mPoint,
-//                function mCallback(rs) {
-//                    var allPois = rs.surroundingPois;       //获取全部POI（该点半径为100米内有6个POI点）
-//                    allPois.forEach(function (place) {
-//                        var html = "<div class='list' ><div class='site' id=" + place.title + ">" + place.title + "</div><div class='site_down'>" + place.address + "</div><span class='right'><img class='tex'  src='../API/outstyle091100004.jpg' id=" + place.title + "></span></div></div>";
-//                        $("#panel").append(html);
-//                        $(document).ready(function () {
-//                            $('#' + place.title).click(function () {
-//                                $('.tex').css('display', 'none');
-//                                $('#' + place.title).show();
-//                            });
-//                        });
-//                        $('.anchorBL').css('display', 'none');
-//                    })
-//
-//                }, mOption
-//        );
-//    }
 
 </script>
 </body>
