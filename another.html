@@ -57,8 +57,10 @@
         map.addOverlay(new BMap.Circle(mPoint, 0));        //添加一个圆形覆盖物
         myGeo.getLocation(mPoint,
                 function mCallback(rs) {
-                    var orignal = document.getElementById('panl');
-                    orignal.parentNode.removeChild(orignal);
+                    $(document).ready(function(){
+                        $("#panel").replaceAll($("#panl"));                       //用strong标签把div标签都替换掉
+//$("div").replaceWith($("strong"));                  //和上面的一样，没什么区别，写法不同
+                    });
                     var allPois = rs.surroundingPois;       //获取全部POI（该点半径为100米内有6个POI点）
                     allPois.forEach(function (place) {
                         var html = "<div class='list' ><div class='site' id=" + place.title + ">" + place.title + "</div><div class='site_down'>" + place.address + "</div><span class='right'><img class='tex'  src='../API/outstyle091100004.jpg' id=" + place.title + "></span></div></div>";
