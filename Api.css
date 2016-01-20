@@ -34,9 +34,10 @@
     height: 325px;
     width: 100%;
     overflow-y:scroll;
-
-
 }
+/*div#view::-webkit-scrollbar {*/
+    /*background: transparent;*/
+/*}*/
 /*overflow:hidden*/
 html { overflow: hidden; }
 body{
@@ -50,9 +51,7 @@ body{
     margin-top: 10px;
 }
 
-/*div#view::-webkit-scrollbar {*/
-    /*background: transparent;*/
-/*}*/
+
 
 /*div#view:hover::-webkit-scrollbar {*/
     /*background: lightyellow;*/
