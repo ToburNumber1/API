@@ -33,7 +33,10 @@
         getLocation()
 //        geocoder()
         displayPOI()
-
+        $(document).ready(function(){
+            console.log("22222")
+            $("#panl").empty();
+        });
     }
     var map = new AMap.Map("contair", {
         resizeEnable: true
@@ -46,6 +49,20 @@
 
             $("#panel").remove();
         });
+        $(document).ready(function() {
+            $('#tipinput').click(function () {
+                $("#panl").empty();
+            });
+        })
+//        $(document).ready(function () {
+//            $("#tipinput").focus(function () { //得到焦点
+//                $("#tipinput").html("请填写。");
+//            });
+//
+//            $("#tipinput").blur(function () { //失去焦点
+//                $("#tipinput").html("");
+//            });
+//        });
         var geocode = data.geocodes;
         var dress = JSON.parse(localStorage.getItem("info"))
         var obj_info = {latitude: geocode[0].location.getLat(), longitude: geocode[0].location.getLng()}//gaiII
@@ -60,7 +77,7 @@
         map.centerAndZoom(mPoint, 50);
         map.enableScrollWheelZoom();
         var myGeo = new BMap.Geocoder();        //创建地址解析实例
-        map.addOverlay(new BMap.Circle(mPoint, 0));
+
       //添加一个圆形覆盖物
         myGeo.getLocation(mPoint,
                 function mCallback(rs) {
@@ -85,6 +102,7 @@
 
                                 }, mOption
                         );
+
 }
     function getLocation() {
         if (navigator.geolocation) {
