@@ -33,13 +33,19 @@
         getLocation()
 //        geocoder()
         displayPOI()
+
     }
     var map = new AMap.Map("contair", {
         resizeEnable: true
     });
     function geocoder_CallBack(data) {
-        var orignal = document.getElementById('panel');
-        orignal.parentNode.removeChild(orignal);
+
+//            var orignal = document.getElementById('panel');
+//            orignal.parentNode.removeChild(orignal);
+        $(document).ready(function(){
+
+            $("#panel").remove();
+        });
         var geocode = data.geocodes;
         var dress = JSON.parse(localStorage.getItem("info"))
         var obj_info = {latitude: geocode[0].location.getLat(), longitude: geocode[0].location.getLng()}//gaiII
@@ -54,30 +60,32 @@
         map.centerAndZoom(mPoint, 50);
         map.enableScrollWheelZoom();
         var myGeo = new BMap.Geocoder();        //创建地址解析实例
-        map.addOverlay(new BMap.Circle(mPoint, 0));        //添加一个圆形覆盖物
+        map.addOverlay(new BMap.Circle(mPoint, 0));
+      //添加一个圆形覆盖物
         myGeo.getLocation(mPoint,
                 function mCallback(rs) {
-                    $(document).ready(function(){
-                        $("#panel").replaceAll($("#panl"));                       //用strong标签把div标签都替换掉
+
+//                    $(document).ready(function(){
+//                        $("#panl").replaceWith(function(){
+                                               //用strong标签把div标签都替换掉
 //$("div").replaceWith($("strong"));                  //和上面的一样，没什么区别，写法不同
-                    });
-                    var allPois = rs.surroundingPois;       //获取全部POI（该点半径为100米内有6个POI点）
-                    allPois.forEach(function (place) {
-                        var html = "<div class='list' ><div class='site' id=" + place.title + ">" + place.title + "</div><div class='site_down'>" + place.address + "</div><span class='right'><img class='tex'  src='../API/outstyle091100004.jpg' id=" + place.title + "></span></div></div>";
-                        $("#panl").append(html);
-                        $(document).ready(function () {
-                            $('#' + place.title).click(function () {
-                                $('.tex').css('display', 'none');
-                                $('#' + place.title).show();
-                            });
-                        });
-                        $('.anchorBL').css('display', 'none');
-                    })
+                                    var allPois = rs.surroundingPois;       //获取全部POI（该点半径为100米内有6个POI点）
+                                    allPois.forEach(function (place) {
+                                        var html = "<div class='list' ><div class='site' id=" + place.title + ">" + place.title + "</div><div class='site_down'>" + place.address + "</div><span class='right'><img class='tex'  src='../API/outstyle091100004.jpg' id=" + place.title + "></span></div></div>";
+                                        $("#panl").append(html);
+                                        $($.parseHTML(html, document, true)).appendTo("body");
+                                        $(document).ready(function () {
+                                            $('#' + place.title).click(function () {
+                                                $('.tex').css('display', 'none');
+                                                $('#' + place.title).show();
+                                            });
+                                        });
+                                        $('.anchorBL').css('display', 'none');
+                                    })
 
-                }, mOption
-        );
-
-    }
+                                }, mOption
+                        );
+}
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
@@ -120,9 +128,6 @@
         placeSearch.setCity(e.poi.adcode);
         placeSearch.search(e.poi.name);  //关键字查询查询
         var poiArr = e.poi.name;
-
-//        var orignal = document.getElementById('panel');
-//        orignal.parentNode.removeChild(orignal);
         localStorage.setItem("name", JSON.stringify(poiArr));
         var geocoder = new AMap.Geocoder({
             //城市，默认：“全国”
@@ -135,7 +140,6 @@
                 geocoder_CallBack(result);
             }
         });
-
     }
     var dress = JSON.parse(localStorage.getItem("info"))
     var map = new BMap.Map("containe");
