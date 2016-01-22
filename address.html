@@ -15,7 +15,8 @@
 </head>
 <body>
 <div class="box_dis">
-    <input class="search" id="tipinput" />
+    <!--<input class="search" id="tipinput" />-->
+    <input class="search" type="text" value="请输入您的姓名" id="tipinput" />
 </div>
 
 <div class="distance">
@@ -25,14 +26,34 @@
     <div id="panel"></div>
 </div>
 <div id="containe"></div>
-<script type="text/javascript">
+<script language="JavaScript" type="text/javascript">
+
 
     window.onload = function () {
 
         getLocation()
         displayPOI()
         geocoder()
+
     }
+    function addListener(element,e,fn)
+    {
+        if(element.addEventListener)
+        {
+            element.addEventListener(e,fn,false);
+        }
+        else
+        {
+            element.attachEvent("on" + e,fn);
+        }
+    }
+    var tipinput = document.getElementById("tipinput");
+    addListener(tipinput,"click",function(){
+        tipinput.value = "";
+    })
+    addListener(tipinput,"blur",function(){
+        tipinput.value = "请输入您的姓名1 ";
+    })
     function geocoder() {
         var geocoder = new AMap.Geocoder({
             //城市，默认：“全国”

@@ -15,7 +15,7 @@
 </head>
 <body>
 <div class="box_dis">
-    <input class="search" id="tipinput"/>
+    <input class="search" type="text" value="  搜索地点" id="tipinput" />
 </div>
 
 <div class="distance">
@@ -27,7 +27,24 @@
 </div>
 <div id="containe"></div>
 <script type="text/javascript">
-
+    function addListener(element,e,fn)
+    {
+        if(element.addEventListener)
+        {
+            element.addEventListener(e,fn,false);
+        }
+        else
+        {
+            element.attachEvent("on" + e,fn);
+        }
+    }
+    var tipinput = document.getElementById("tipinput");
+    addListener(tipinput,"click",function(){
+        tipinput.value = "";
+    })
+    addListener(tipinput,"blur",function(){
+        tipinput.value ="  搜索地点";
+    })
     window.onload = function () {
 
         getLocation()
@@ -76,32 +93,32 @@
         map.enableScrollWheelZoom();
         var myGeo = new BMap.Geocoder();        //创建地址解析实例
 
-      //添加一个圆形覆盖物
+        //添加一个圆形覆盖物
         myGeo.getLocation(mPoint,
                 function mCallback(rs) {
 
 //                    $(document).ready(function(){
 //                        $("#panl").replaceWith(function(){
-                                               //用strong标签把div标签都替换掉
+                    //用strong标签把div标签都替换掉
 //$("div").replaceWith($("strong"));                  //和上面的一样，没什么区别，写法不同
-                                    var allPois = rs.surroundingPois;       //获取全部POI（该点半径为100米内有6个POI点）
-                                    allPois.forEach(function (place) {
-                                        var html = "<div class='list' ><div class='site' id=" + place.title + ">" + place.title + "</div><div class='site_down'>" + place.address + "</div><span class='right'><img class='tex'  src='../API/outstyle091100004.jpg' id=" + place.title + "></span></div></div>";
-                                        $("#panl").append(html);
-                                        $($.parseHTML(html, document, true)).appendTo("body");
-                                        $(document).ready(function () {
-                                            $('#' + place.title).click(function () {
-                                                $('.tex').css('display', 'none');
-                                                $('#' + place.title).show();
-                                            });
-                                        });
-                                        $('.anchorBL').css('display', 'none');
-                                    })
+                    var allPois = rs.surroundingPois;       //获取全部POI（该点半径为100米内有6个POI点）
+                    allPois.forEach(function (place) {
+                        var html = "<div class='list' ><div class='site' id=" + place.title + ">" + place.title + "</div><div class='site_down'>" + place.address + "</div><span class='right'><img class='tex'  src='../API/outstyle091100004.jpg' id=" + place.title + "></span></div></div>";
+                        $("#panl").append(html);
+                        $($.parseHTML(html, document, true)).appendTo("body");
+                        $(document).ready(function () {
+                            $('#' + place.title).click(function () {
+                                $('.tex').css('display', 'none');
+                                $('#' + place.title).show();
+                            });
+                        });
+                        $('.anchorBL').css('display', 'none');
+                    })
 
-                                }, mOption
-                        );
+                }, mOption
+        );
 
-}
+    }
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
