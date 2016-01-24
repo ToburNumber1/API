@@ -15,7 +15,10 @@
 </head>
 <body>
 <div class="box_dis">
-    <input class="search" id="tipinput"/>
+    <!--<input class="search" id="tipinput"/>-->
+    <div class="searc" type="text"  contenteditable="true" id="tipinput">
+        <img class='text'  src='../API/outstyle091100004.jpg' />
+    </div>
 </div>
 
 <div class="distance">
@@ -133,7 +136,7 @@
         AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
     });
     var autoOptions = {
-        input: "tipinput"
+        div: "tipinput"
     };
     var auto = new AMap.Autocomplete(autoOptions);
     var placeSearch = new AMap.PlaceSearch({

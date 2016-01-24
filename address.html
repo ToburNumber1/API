@@ -15,8 +15,7 @@
 </head>
 <body>
 <div class="box_dis">
-    <!--<input class="search" id="tipinput" />-->
-    <input class="search" type="text" value="请输入您的姓名" id="tipinput" />
+    <input class="search" type="text" value="  搜索地点" id="tipinput" />
 </div>
 
 <div class="distance">
@@ -24,18 +23,10 @@
 </div>
 <div class="scroll" id="view">
     <div id="panel"></div>
+    <div id="panl"></div>
 </div>
 <div id="containe"></div>
-<script language="JavaScript" type="text/javascript">
-
-
-    window.onload = function () {
-
-        getLocation()
-        displayPOI()
-        geocoder()
-
-    }
+<script type="text/javascript">
     function addListener(element,e,fn)
     {
         if(element.addEventListener)
@@ -52,41 +43,29 @@
         tipinput.value = "";
     })
     addListener(tipinput,"blur",function(){
-        tipinput.value = "请输入您的姓名1 ";
+        tipinput.value ="  搜索地点";
     })
-    function geocoder() {
-        var geocoder = new AMap.Geocoder({
-            //城市，默认：“全国”
-            radius: 1000 //范围，默认：500
-        });
-        //地理编码,返回地理编码结果
-        geocoder.getLocation(JSON.parse(localStorage.getItem("name")), function(status, result) {
-            if (status === 'complete' && result.info === 'OK') {
-                geocoder_CallBack(result);
-            }
-        });
-    }
-    //    function addMarker(i, d) {
-    //        var marker = new AMap.Marker({
-    //            map: map,
-    //            position: [ d.location.getLng(),  d.location.getLat()]
-    //        });
-    //        var infoWindow = new AMap.InfoWindow({
-    //            content: d.formattedAddress,
-    //            offset: {x: 0, y: -30}
-    //        });
-    //        marker.on("mouseover", function(e) {
-    //            infoWindow.open(map, marker.getPosition());
-    //        });
-    //    }
-    //    //地理编码返回结果展示
-    function geocoder_CallBack(data) {
+    window.onload = function () {
 
+        getLocation()
+//        geocoder()
+        displayPOI()
+
+    }
+    var map = new AMap.Map("contair", {
+        resizeEnable: true
+    });
+    function geocoder_CallBack(data) {
+        $(document).ready(function(){
+
+            $("#panel").remove();
+        });
+        $("#panl").empty();
         var geocode = data.geocodes;
         var dress = JSON.parse(localStorage.getItem("info"))
         var obj_info = {latitude: geocode[0].location.getLat(), longitude: geocode[0].location.getLng()}//gaiII
         localStorage.setItem("data", JSON.stringify(obj_info));
-
+        console.log(JSON.parse(localStorage.getItem("name")))
         var mPoint = new BMap.Point(obj_info.longitude, obj_info.latitude);
 
         var mOption = {
@@ -95,15 +74,14 @@
         }
         map.centerAndZoom(mPoint, 50);
         map.enableScrollWheelZoom();
-        var myGeo = new BMap.Geocoder();        //创建地址解析实例
-        map.addOverlay(new BMap.Circle(mPoint, 0));        //添加一个圆形覆盖物
+        var myGeo = new BMap.Geocoder();
         myGeo.getLocation(mPoint,
                 function mCallback(rs) {
                     var allPois = rs.surroundingPois;       //获取全部POI（该点半径为100米内有6个POI点）
                     allPois.forEach(function (place) {
-
                         var html = "<div class='list' ><div class='site' id=" + place.title + ">" + place.title + "</div><div class='site_down'>" + place.address + "</div><span class='right'><img class='tex'  src='../API/outstyle091100004.jpg' id=" + place.title + "></span></div></div>";
                         $("#panl").append(html);
+                        $($.parseHTML(html, document, true)).appendTo("body");
                         $(document).ready(function () {
                             $('#' + place.title).click(function () {
                                 $('.tex').css('display', 'none');
@@ -115,6 +93,7 @@
 
                 }, mOption
         );
+
     }
     function getLocation() {
         if (navigator.geolocation) {
@@ -130,6 +109,7 @@
     map = new AMap.Map('container', {
         resizeEnable: true
     });
+
     $('.amap-logo').css('display', 'none');
     $('.amap-copyright').css('display', 'none');
     map.plugin('AMap.Geolocation', function () {
@@ -157,17 +137,22 @@
         placeSearch.setCity(e.poi.adcode);
         placeSearch.search(e.poi.name);  //关键字查询查询
         var poiArr = e.poi.name;
-        console.log(poiArr)
+        localStorage.setItem("name", JSON.stringify(poiArr));
+        var geocoder = new AMap.Geocoder({
+            //城市，默认：“全国”
+            radius: 1000 //范围，默认：500
 
-        localStorage.setItem("name",JSON.stringify(poiArr))
+        });
+
+        geocoder.getLocation(JSON.parse(localStorage.getItem("name")), function (status, result) {
+            if (status === 'complete' && result.info === 'OK') {
+                geocoder_CallBack(result);
+            }
+        });
     }
     var dress = JSON.parse(localStorage.getItem("info"))
-
     var map = new BMap.Map("containe");
-
-    var mPoint = new BMap.Point(dress.longitude, dress.latitude);
-    map.centerAndZoom(mPoint, 15);
-    map.enableScrollWheelZoom();        //启用滚轮缩放
+    localStorage.removeItem("name")
     function displayPOI() {
         //启用滚轮缩放
         var dress = JSON.parse(localStorage.getItem("info"))
@@ -198,6 +183,7 @@
                 }, mOption
         );
     }
+
 </script>
 </body>
-</html> 
+</html>
