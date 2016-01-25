@@ -5,17 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <title>输入提示后查询</title>
-
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.2"></script>
     <script src="../API/jquery-2.1.4.min.js"></script>
     <script type="text/javascript"
-            src="http://webapi.amap.com/maps?v=1.3&key=ada0145080deff882d2a28e8af2047ad&plugin=AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch"></script>
+            src="http://webapi.amap.com/maps?v=1.3&key=ada0145080deff882d2a28e8af2047ad&plugin=AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.onComplete"></script>
     <link rel="stylesheet" type="text/css" href="../API/Api.css">
 
 </head>
 <body>
 <div class="box_dis">
-    <input class="search" type="text" value="  搜索地点" id="tipinput" />
+    <input class="search" type="text" value="  搜索地点" id="tipinput"/>
 </div>
 
 <div class="distance">
@@ -27,23 +26,20 @@
 </div>
 <div id="containe"></div>
 <script type="text/javascript">
-    function addListener(element,e,fn)
-    {
-        if(element.addEventListener)
-        {
-            element.addEventListener(e,fn,false);
+    function addListener(element, e, fn) {
+        if (element.addEventListener) {
+            element.addEventListener(e, fn, false);
         }
-        else
-        {
-            element.attachEvent("on" + e,fn);
+        else {
+            element.attachEvent("on" + e, fn);
         }
     }
     var tipinput = document.getElementById("tipinput");
-    addListener(tipinput,"click",function(){
+    addListener(tipinput, "click", function () {
         tipinput.value = "";
     })
-    addListener(tipinput,"blur",function(){
-        tipinput.value ="  搜索地点";
+    addListener(tipinput, "blur", function () {
+        tipinput.value = "  搜索地点";
     })
     window.onload = function () {
 
@@ -55,11 +51,12 @@
     var map = new AMap.Map("contair", {
         resizeEnable: true
     });
+
     function geocoder_CallBack(data) {
 
 //            var orignal = document.getElementById('panel');
 //            orignal.parentNode.removeChild(orignal);
-        $(document).ready(function(){
+        $(document).ready(function () {
 
             $("#panel").remove();
         });
@@ -83,7 +80,8 @@
         var obj_info = {latitude: geocode[0].location.getLat(), longitude: geocode[0].location.getLng()}//gaiII
         localStorage.setItem("data", JSON.stringify(obj_info));
         console.log(JSON.parse(localStorage.getItem("name")))
-        var mPoint = new BMap.Point(obj_info.longitude, obj_info.latitude);
+        var ee = JSON.parse(localStorage.getItem("data"))
+        var mPoint = new BMap.Point(ee.longitude, ee.latitude);
 
         var mOption = {
             poiRadius: 2500,           //半径为1000米内的POI,默认100米
@@ -124,6 +122,8 @@
             navigator.geolocation.getCurrentPosition(showPosition);
         }
     }
+
+
     function showPosition(position) {
         var obj_info = {latitude: position.coords.latitude, longitude: position.coords.longitude};
         localStorage.setItem("info", JSON.stringify(obj_info));
@@ -133,7 +133,70 @@
     map = new AMap.Map('container', {
         resizeEnable: true
     });
+    var clickEventListener = map.on('click', function (e) {
 
+        var map = {latitude: e.lnglat.getLat(), longitude: e.lnglat.getLng()}
+        localStorage.setItem("data", JSON.stringify(map));
+        near_address()
+    });
+    function near_address() {
+        $(document).ready(function () {
+
+            $("#panel").remove();
+        });
+        $("#panl").empty();
+//        $(document).ready(function() {
+//            $('#tipinput').click(function () {
+//                $("#panl").empty();
+//            });
+//        })
+//        $(document).ready(function () {
+//            $("#tipinput").focus(function () { //得到焦点
+//                $("#tipinput").html("请填写。");
+//            });
+//
+//            $("#tipinput").blur(function () { //失去焦点
+//                $("#tipinput").html("");
+//            });
+//        });
+
+        console.log(JSON.parse(localStorage.getItem("name")))
+        var ee = JSON.parse(localStorage.getItem("data"))
+        var mPoint = new BMap.Point(ee.longitude, ee.latitude);
+
+        var mOption = {
+            poiRadius: 2500,           //半径为1000米内的POI,默认100米
+            numPois: 30             //列举出50个POI,默认10个
+        }
+        map.centerAndZoom(mPoint, 50);
+        map.enableScrollWheelZoom();
+        var myGeo = new BMap.Geocoder();        //创建地址解析实例
+
+        //添加一个圆形覆盖物
+        myGeo.getLocation(mPoint,
+                function mCallback(rs) {
+
+//                    $(document).ready(function(){
+//                        $("#panl").replaceWith(function(){
+                    //用strong标签把div标签都替换掉
+//$("div").replaceWith($("strong"));                  //和上面的一样，没什么区别，写法不同
+                    var allPois = rs.surroundingPois;       //获取全部POI（该点半径为100米内有6个POI点）
+                    allPois.forEach(function (place) {
+                        var html = "<div class='list' ><div class='site' id=" + place.title + ">" + place.title + "</div><div class='site_down'>" + place.address + "</div><span class='right'><img class='tex'  src='../API/outstyle091100004.jpg' id=" + place.title + "></span></div></div>";
+                        $("#panl").append(html);
+                        $($.parseHTML(html, document, true)).appendTo("body");
+                        $(document).ready(function () {
+                            $('#' + place.title).click(function () {
+                                $('.tex').css('display', 'none');
+                                $('#' + place.title).show();
+                            });
+                        });
+                        $('.anchorBL').css('display', 'none');
+                    })
+
+                }, mOption
+        );
+    }
     $('.amap-logo').css('display', 'none');
     $('.amap-copyright').css('display', 'none');
     map.plugin('AMap.Geolocation', function () {

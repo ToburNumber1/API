@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>输入提示后查询</title>
+
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.2"></script>
+    <script src="../API/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript"
+            src="http://webapi.amap.com/maps?v=1.3&key=ada0145080deff882d2a28e8af2047ad&plugin=AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch,AMap.onComplete"></script>
+    <link rel="stylesheet" type="text/css" href="../API/Api.css">
+
+</head>
+<body>
+<div class="box_dis">
+    <input class="search" type="text"   id="tipinput">
+</div>
+
+<div class="distance">
+    <div id="container"></div>
+</div>
+<div class="scroll" id="view">
+    <div id="panel"></div>
+    <div id="panl"></div>
+</div>
+<div id="containe"></div>
+<script type="text/javascript">
+    function addListener(element, e, fn) {
+        if (element.addEventListener) {
+            element.addEventListener(e, fn, false);
+        }
+        else {
+            element.attachEvent("on" + e, fn);
+        }
+    }
+    var tipinput = document.getElementById("tipinput");
+    addListener(tipinput, "click", function () {
+        tipinput.value = "";
+    })
+    addListener(tipinput, "blur", function () {
+        tipinput.value = "  搜索地点";
+    })
+
+</script>
+</body>
+</html>

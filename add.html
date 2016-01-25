@@ -52,7 +52,7 @@
         for (var i = 0; i < geocode.length; i++) {
 
             var obj_info = {latitude: geocode[i].location.getLat(), longitude: geocode[i].location.getLng()}
-            localStorage.setItem("data", JSON.stringify(obj_info));
+            localStorage.setItem("d", JSON.stringify(obj_info));
             console.log(obj_info)
 
         }

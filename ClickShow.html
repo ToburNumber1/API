@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>鼠标拾取地图坐标</title>
+    <link rel="stylesheet" type="text/css" href="../API/Api.css">
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+    <script type="text/javascript"
+            src="http://webapi.amap.com/maps?v=1.3&key=ada0145080deff882d2a28e8af2047ad&plugin=AMap.Autocomplete"></script>
+    <script type="text/javascript" src="../API/toolbar.js"></script>
+</head>
+<body>
+<div id="container"></div>
+
+<script type="text/javascript">
+    var map = new AMap.Map("container", {
+        resizeEnable: true
+    });
+    //为地图注册click事件获取鼠标点击出的经纬度坐标
+    var clickEventListener = map.on('click', function(e) {
+
+        var map={lng:e.lnglat.getLat(),lnglat:e.lnglat.getLng()}
+        localStorage.setItem("imp", JSON.stringify(map));
+    });
+
+</script>
+</body>
+</html>	
