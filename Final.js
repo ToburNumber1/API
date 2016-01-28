@@ -21,9 +21,10 @@ function input() {
     var tipinput = document.getElementById("tipinput");
     addListener(tipinput, "click", function () {
         tipinput.value = "";
+        //$('.myname').css('display', 'none');
     })
     addListener(tipinput, "blur", function () {
-        tipinput.value = "  搜索地点";
+        tipinput.value ="搜索地点";
     })
 }
 
@@ -105,6 +106,7 @@ function getLocation() {
 }
 function showPosition(position) {
     var obj_info = {latitude: position.coords.latitude, longitude: position.coords.longitude};
+    console.log(obj_info.latitude)
     localStorage.setItem("info", JSON.stringify(obj_info));
     displayPOI()
 }

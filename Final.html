@@ -14,6 +14,7 @@
 </head>
 <body>
 <div class="box_dis">
+    <!--<div> <div class="searc" ><img src="images.jpg " height="15" wide="15"></div><input class="search" type="text" value="  搜索地点" id="tipinput"/></div>-->
     <input class="search" type="text" value="  搜索地点" id="tipinput"/>
 </div>
 
@@ -27,12 +28,14 @@
 <div id="containe"></div>
 <script type="text/javascript">
     function addListener(element, e, fn) {
+
         if (element.addEventListener) {
             element.addEventListener(e, fn, false);
         }
         else {
             element.attachEvent("on" + e, fn);
         }
+
     }
     var tipinput = document.getElementById("tipinput");
     addListener(tipinput, "click", function () {
@@ -125,8 +128,10 @@
 
 
     function showPosition(position) {
+        console.log("ss")
         var obj_info = {latitude: position.coords.latitude, longitude: position.coords.longitude};
         localStorage.setItem("info", JSON.stringify(obj_info));
+        console.log(obj_info.latitude)
     }
     var map, geolocation;
     //加载地图，调用浏览器定位服务
